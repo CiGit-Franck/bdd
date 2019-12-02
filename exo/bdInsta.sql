@@ -22,17 +22,18 @@ create table instagram.photo
 (
 	id serial not null
 		constraint photo_pk
-			primary key
-		constraint photo_user_id_fk
-			references instagram."user"
-				on update cascade on delete cascade,
+			primary key,
 	caption varchar not null,
 	latitude numeric not null,
 	longitude numeric not null,
 	imagepath varchar not null,
 	imagesize integer not null,
 	creationdat date not null,
-	lastupdatedate date
+	lastupdatedate date,
+	id_user integer not null
+		constraint photo_user_id_fk
+			references instagram."user"
+				on update cascade on delete cascade
 );
 
 alter table instagram.photo owner to franck;
@@ -53,27 +54,41 @@ alter table instagram.hashtag owner to franck;
 
 create table instagram."like"
 (
-	id integer not null
+	id serial not null
+		constraint like_pk
+			primary key,
+	datecreated date not null,
+	id_photo integer not null
 		constraint like_photo_id_fk
-			references instagram.photo
-				on update cascade on delete cascade
+			references instagram.photo,
+	id_user integer not null
 		constraint like_user_id_fk
 			references instagram."user"
-				on update cascade on delete cascade,
-	datecreated date not null
 );
 
 alter table instagram."like" owner to franck;
 
+create unique index like_id_uindex
+	on instagram."like" (id);
+
 create table instagram.comment
 (
-	id integer not null
+	id integer default nextval('instagram.comment_id_seq'::regclass) not null
+		constraint comment_pk
+			primary key,
+	comment varchar,
+	id_photo integer not null
 		constraint comment_photo_id_fk
 			references instagram.photo
+				on update cascade on delete cascade,
+	id_user integer not null
 		constraint comment_user_id_fk
-			references instagram."user",
-	comment varchar
+			references instagram."user"
+				on update cascade on delete cascade
 );
 
 alter table instagram.comment owner to franck;
+
+create unique index comment_id_uindex
+	on instagram.comment (id);
 

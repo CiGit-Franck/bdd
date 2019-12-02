@@ -1,0 +1,10 @@
+https://github.com/CiGit-Franck/bdd.git
+git init
+git add *
+git commit -m "first commit"
+git push
+
+cd /cygdrive/c/devpt/bdd
+git pull https://github.com/CiGit-Franck/bdd.git
+git commit -m "update"
+git push
