@@ -40,3 +40,34 @@ where fromcity.country_idx = tocity.country_idx
 order by pays, depart;
 
 -- Affichage des vols intérieurs plus longs que 5h
+
+-- Afficher les 5 vols ayant le plus de personnel navigant
+select
+    c1.name as City_From,
+    c2.name as City_to,
+    count(*) as Employees
+from
+    airlines.flights
+    left join airlines.cities c1 on flights.from_city = c1.id
+    left join airlines.cities c2 on flights.to_city = c2.id
+    left join airlines.flights_employees fe on flights.id = fe.flight_idx
+group by
+    c1.name,
+    c2.name
+order by 3 desc limit 5;
+
+-- Afficher les personnes travaillant moins d'une heure dans la compagnie
+select distinct
+     airlines.employees.first_name as firstname,
+     airlines.employees.last_name as lastname,
+     sum(airlines.flights.std_duration_sec / 3600) as hourwork
+from
+    airlines.employees
+    left join airlines.flights_employees fe on employees.id = fe.employee_idx
+    left join airlines.flights on fe.flight_idx = flights.id
+group by
+    firstname,
+    lastname
+having
+    sum(flights.std_duration_sec / 3600) < 1
+order by lastname,firstname;
