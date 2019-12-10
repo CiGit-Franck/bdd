@@ -1,3 +1,7 @@
+>
+grant usage on schema cities to public;
+grant create on schema cities to public;
+
 https://github.com/CiGit-Franck/bdd.git
 git init
 git add *
